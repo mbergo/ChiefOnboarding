@@ -30,7 +30,7 @@ build-no-cache: ## Build without using cache
 start: ## Start services in detached mode
 	@echo "$(GREEN)Starting services...$(NC)"
 	docker compose up -d
-	@echo "$(GREEN)✓ Services started. Access at http://localhost:8600$(NC)"
+	@echo "$(GREEN)✓ Services started. Access at http://localhost:9000$(NC)"
 
 up: start ## Alias for start
 
@@ -189,7 +189,7 @@ setup: ## Initial setup - build and start services
 	@$(MAKE) start
 	@sleep 5
 	@$(MAKE) migrate
-	@echo "$(GREEN)✓ Setup complete! Access at http://localhost:8600$(NC)"
+	@echo "$(GREEN)✓ Setup complete! Access at http://localhost:9000$(NC)"
 
 reset: ## Reset everything and start fresh (DESTRUCTIVE)
 	@echo "$(RED)⚠ WARNING: This will delete all data!$(NC)"
@@ -205,14 +205,14 @@ reset: ## Reset everything and start fresh (DESTRUCTIVE)
 
 urls: ## Show service URLs
 	@echo "$(BLUE)Service URLs:$(NC)"
-	@echo "  Web:      http://localhost:8600"
-	@echo "  Admin:    http://localhost:8600/admin"
+	@echo "  Web:      http://localhost:9000"
+	@echo "  Admin:    http://localhost:9000/admin"
 	@echo "  Database: localhost:5432"
 
 health: ## Check service health
 	@echo "$(BLUE)Service Health Check:$(NC)"
 	@docker compose ps | grep -q "Up" && echo "$(GREEN)✓ Services are running$(NC)" || echo "$(RED)✗ Services are not running$(NC)"
-	@curl -s -o /dev/null -w "  Web: %{http_code}\n" http://localhost:8600 || echo "  Web: $(RED)DOWN$(NC)"
+	@curl -s -o /dev/null -w "  Web: %{http_code}\n" http://localhost:9000 || echo "  Web: $(RED)DOWN$(NC)"
 
 info: ## Show system information
 	@echo "$(BLUE)System Information:$(NC)"

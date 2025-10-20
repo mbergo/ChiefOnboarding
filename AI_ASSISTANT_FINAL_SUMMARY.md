@@ -58,15 +58,15 @@ Result: Professional, helpful, and honest interaction
 ## 🎯 Access Information
 
 ### **Web Interface**
-- **URL**: http://localhost:8600/admin/ai-assistant/
+- **URL**: http://localhost:9000/admin/ai-assistant/
 - **Login**: 
   - Email: `admin@workforce.com`
   - Password: `admin123`
 
 ### **API Documentation**
-- **Swagger UI**: http://localhost:8600/api/schema/swagger-ui/
-- **ReDoc**: http://localhost:8600/api/schema/redoc/
-- **OpenAPI Schema**: http://localhost:8600/api/schema/
+- **Swagger UI**: http://localhost:9000/api/schema/swagger-ui/
+- **ReDoc**: http://localhost:9000/api/schema/redoc/
+- **OpenAPI Schema**: http://localhost:9000/api/schema/
 
 ---
 
@@ -312,7 +312,7 @@ Creates a new onboarding or offboarding sequence.
 
 1. Edit Python files in `back/ai_assistant/`
 2. Django auto-reloads changes
-3. Test in browser at http://localhost:8600/admin/ai-assistant/
+3. Test in browser at http://localhost:9000/admin/ai-assistant/
 
 ### **Adding New Functions:**
 

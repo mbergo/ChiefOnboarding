@@ -196,6 +196,141 @@ class ChiefOnboardingAgent:
                     },
                 },
             },
+            {
+                "type": "function",
+                "function": {
+                    "name": "update_employee",
+                    "description": "Update employee information (name, email, position, phone, etc.)",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "description": "Current email of the employee to update",
+                            },
+                            "first_name": {
+                                "type": "string",
+                                "description": "New first name (optional)",
+                            },
+                            "last_name": {
+                                "type": "string",
+                                "description": "New last name (optional)",
+                            },
+                            "new_email": {
+                                "type": "string",
+                                "description": "New email address (optional)",
+                            },
+                            "position": {
+                                "type": "string",
+                                "description": "New position/title (optional)",
+                            },
+                            "phone": {
+                                "type": "string",
+                                "description": "New phone number (optional)",
+                            },
+                            "role": {
+                                "type": "string",
+                                "enum": ["newhire", "admin", "manager"],
+                                "description": "New role (optional)",
+                            },
+                        },
+                        "required": ["email"],
+                    },
+                },
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "delete_employee",
+                    "description": "Delete an employee from the system (CAUTION: This is permanent)",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "description": "Email of the employee to delete",
+                            },
+                        },
+                        "required": ["email"],
+                    },
+                },
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "search_employees",
+                    "description": "Search employees by name, email, or position",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": {
+                                "type": "string",
+                                "description": "Search query (name, email, or position)",
+                            },
+                        },
+                        "required": ["query"],
+                    },
+                },
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "assign_manager_to_employee",
+                    "description": "Assign or change the manager for an employee",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "employee_email": {
+                                "type": "string",
+                                "description": "Email of the employee",
+                            },
+                            "manager_email": {
+                                "type": "string",
+                                "description": "Email of the manager to assign",
+                            },
+                        },
+                        "required": ["employee_email", "manager_email"],
+                    },
+                },
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "assign_buddy_to_employee",
+                    "description": "Assign or change the buddy/mentor for an employee",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "employee_email": {
+                                "type": "string",
+                                "description": "Email of the employee",
+                            },
+                            "buddy_email": {
+                                "type": "string",
+                                "description": "Email of the buddy/mentor to assign",
+                            },
+                        },
+                        "required": ["employee_email", "buddy_email"],
+                    },
+                },
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_employee_progress",
+                    "description": "Get the onboarding progress and tasks status for an employee",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "description": "Email of the employee",
+                            },
+                        },
+                        "required": ["email"],
+                    },
+                },
+            },
         ]
 
     def create_new_hire(
@@ -437,6 +572,195 @@ class ChiefOnboardingAgent:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
+    def update_employee(
+        self,
+        email: str,
+        first_name: Optional[str] = None,
+        last_name: Optional[str] = None,
+        new_email: Optional[str] = None,
+        position: Optional[str] = None,
+        phone: Optional[str] = None,
+        role: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        try:
+            user = User.objects.get(email__iexact=email)
+            
+            if first_name:
+                user.first_name = first_name
+            if last_name:
+                user.last_name = last_name
+            if new_email:
+                user.email = new_email
+            if position:
+                user.position = position
+            if phone:
+                user.phone = phone
+            if role:
+                role_map = {
+                    "newhire": User.Role.NEWHIRE,
+                    "admin": User.Role.ADMIN,
+                    "manager": User.Role.MANAGER,
+                }
+                user.role = role_map.get(role.lower(), user.role)
+            
+            user.save()
+            
+            return {
+                "success": True,
+                "message": f"Successfully updated employee: {user.full_name}",
+                "employee": {
+                    "id": user.id,
+                    "name": user.full_name,
+                    "email": user.email,
+                    "position": user.position,
+                },
+            }
+        except User.DoesNotExist:
+            return {"success": False, "error": f"Employee with email {email} not found"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def delete_employee(self, email: str) -> Dict[str, Any]:
+        try:
+            user = User.objects.get(email__iexact=email)
+            user_name = user.full_name
+            user_id = user.id
+            
+            user.delete()
+            
+            return {
+                "success": True,
+                "message": f"Successfully deleted employee: {user_name} (ID: {user_id})",
+            }
+        except User.DoesNotExist:
+            return {"success": False, "error": f"Employee with email {email} not found"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def search_employees(self, query: str) -> Dict[str, Any]:
+        try:
+            from django.db.models import Q
+            
+            users = User.objects.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query) |
+                Q(position__icontains=query)
+            )[:20]
+            
+            results = [
+                {
+                    "id": user.id,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email": user.email,
+                    "role": user.get_role_display(),
+                    "position": user.position,
+                }
+                for user in users
+            ]
+            
+            return {
+                "success": True,
+                "results": results,
+                "count": len(results),
+            }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def assign_manager_to_employee(
+        self, employee_email: str, manager_email: str
+    ) -> Dict[str, Any]:
+        try:
+            employee = User.objects.get(email__iexact=employee_email)
+            manager = User.objects.get(email__iexact=manager_email)
+            
+            employee.manager = manager
+            employee.save()
+            
+            return {
+                "success": True,
+                "message": f"Successfully assigned {manager.full_name} as manager of {employee.full_name}",
+            }
+        except User.DoesNotExist as e:
+            return {"success": False, "error": f"User not found: {str(e)}"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def assign_buddy_to_employee(
+        self, employee_email: str, buddy_email: str
+    ) -> Dict[str, Any]:
+        try:
+            employee = User.objects.get(email__iexact=employee_email)
+            buddy = User.objects.get(email__iexact=buddy_email)
+            
+            employee.buddy = buddy
+            employee.save()
+            
+            return {
+                "success": True,
+                "message": f"Successfully assigned {buddy.full_name} as buddy of {employee.full_name}",
+            }
+        except User.DoesNotExist as e:
+            return {"success": False, "error": f"User not found: {str(e)}"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def get_employee_progress(self, email: str) -> Dict[str, Any]:
+        try:
+            user = User.objects.get(email__iexact=email)
+            
+            if user.role != User.Role.NEWHIRE:
+                return {
+                    "success": False,
+                    "error": f"{user.full_name} is not a new hire (role: {user.get_role_display()})",
+                }
+            
+            from admin.sequences.models import PendingAdminTask
+            from organization.models import ToDoUser, ResourceUser
+            
+            todos = ToDoUser.objects.filter(user=user)
+            resources = ResourceUser.objects.filter(user=user)
+            
+            todo_progress = {
+                "total": todos.count(),
+                "completed": todos.filter(completed=True).count(),
+                "pending": todos.filter(completed=False).count(),
+                "tasks": [
+                    {
+                        "name": todo.to_do.name,
+                        "completed": todo.completed,
+                        "due_day": todo.to_do.due_on_day,
+                    }
+                    for todo in todos[:20]
+                ],
+            }
+            
+            resource_progress = {
+                "total": resources.count(),
+                "completed": resources.filter(completed_course=True).count(),
+                "in_progress": resources.filter(completed_course=False).count(),
+            }
+            
+            sequences = user.unique_sequences
+            
+            return {
+                "success": True,
+                "employee": {
+                    "name": user.full_name,
+                    "email": user.email,
+                    "start_day": str(user.start_day) if user.start_day else None,
+                    "workday": user.workday,
+                },
+                "sequences": [{"id": seq.id, "name": seq.name} for seq in sequences],
+                "todos": todo_progress,
+                "resources": resource_progress,
+            }
+        except User.DoesNotExist:
+            return {"success": False, "error": f"Employee with email {email} not found"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
     def _execute_function(self, function_name: str, arguments: Dict[str, Any]) -> str:
         function_map = {
             "create_new_hire": self.create_new_hire,
@@ -447,6 +771,12 @@ class ChiefOnboardingAgent:
             "create_sequence": self.create_sequence,
             "add_todo_to_sequence": self.add_todo_to_sequence,
             "get_sequence_details": self.get_sequence_details,
+            "update_employee": self.update_employee,
+            "delete_employee": self.delete_employee,
+            "search_employees": self.search_employees,
+            "assign_manager_to_employee": self.assign_manager_to_employee,
+            "assign_buddy_to_employee": self.assign_buddy_to_employee,
+            "get_employee_progress": self.get_employee_progress,
         }
 
         if function_name not in function_map:

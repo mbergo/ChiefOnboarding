@@ -122,7 +122,7 @@ padding: 6px 10px → 8px 14px
    ```
 
 2. **Access Admin Interface:**
-   - URL: http://localhost:8600/admin
+   - URL: http://localhost:9000/admin
    - Login: admin@workforce.com / admin123
 
 3. **Test Views:**

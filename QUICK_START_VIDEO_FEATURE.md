@@ -3,7 +3,7 @@
 ## How to Add a Video to a Task (2 minutes)
 
 ### Step 1: Navigate to To Do Items
-1. Log into admin panel: http://localhost:8600/admin
+1. Log into admin panel: http://localhost:9000/admin
 2. Click "To Do Items" in the sidebar
 3. Click "Create" or select an existing task
 

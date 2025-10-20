@@ -156,7 +156,7 @@ No special deployment steps required:
 - Django 5.2.7
 - PostgreSQL database
 - Docker Compose deployment
-- Running on localhost:8600
+- Running on localhost:9000
 
 ## Session Duration
 Approximately 30 minutes from start to completion

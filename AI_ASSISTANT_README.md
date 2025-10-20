@@ -77,7 +77,7 @@ An intelligent AI assistant powered by OpenAI GPT-4o that understands natural la
 ## 🔧 Technical Details
 
 ### **Access**
-- **URL**: http://localhost:8600/admin/ai-assistant/
+- **URL**: http://localhost:9000/admin/ai-assistant/
 - **Login**: `admin@workforce.com` / `admin123`
 
 ### **API Functions**

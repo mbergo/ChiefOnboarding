@@ -181,7 +181,7 @@ make setup
 make createsuperuser
 
 # Access application
-open http://localhost:8600
+open http://localhost:9000
 ```
 
 ### Daily Development
@@ -416,8 +416,8 @@ make db-restore         # Restore from backup if needed
 ### Port already in use
 
 ```bash
-# Check what's using port 8600
-lsof -i :8600
+# Check what's using port 9000
+lsof -i :9000
 
 # Stop conflicting service or change port in docker-compose.yml
 ```

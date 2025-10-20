@@ -142,7 +142,7 @@ function openVideoModal(embedUrl, title) {
 ## Testing Checklist
 
 - [ ] Start Docker: `docker compose up`
-- [ ] Login as admin: http://localhost:8600/admin
+- [ ] Login as admin: http://localhost:9000/admin
 - [ ] Navigate to Templates → To Do Items
 - [ ] Add video URL to a task
 - [ ] Verify thumbnail appears in list
