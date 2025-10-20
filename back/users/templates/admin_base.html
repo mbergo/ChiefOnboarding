@@ -469,5 +469,39 @@
     {% endblock %}
     {% block extra_js %}
     {% endblock %}
+
+    <!-- Video Modal -->
+    <div class="modal modal-blur fade" id="videoModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="videoModalTitle">{% translate "Video Preview" %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0">
+            <div class="ratio ratio-16x9">
+              <iframe id="videoModalIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function openVideoModal(embedUrl, title) {
+        const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+        const iframe = document.getElementById('videoModalIframe');
+        const modalTitle = document.getElementById('videoModalTitle');
+        
+        iframe.src = embedUrl + '?autoplay=1';
+        modalTitle.textContent = title;
+        
+        modal.show();
+        
+        document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
+          iframe.src = '';
+        });
+      }
+    </script>
   </body>
 </html>

@@ -4,8 +4,20 @@
     <input class="form-check-input" style="width: 1.5rem; height: 1.5rem" disabled type="checkbox" {% if to_do.completed %}checked=""{% endif %}>
   </td>
   <td class="td-truncate">
-    <div class="text-truncate">
-      {{ to_do.to_do.name }}
+    <div class="d-flex align-items-center">
+      <div class="text-truncate">
+        {{ to_do.to_do.name }}
+      </div>
+      {% if to_do.to_do.video_url %}
+      <div style="margin-left: 12px; cursor: pointer;" onclick="openVideoModal('{{ to_do.to_do.get_embed_url }}', '{{ to_do.to_do.name|escapejs }}')">
+        <div style="position: relative; display: inline-block; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+          <img src="{{ to_do.to_do.get_thumbnail_url }}" style="width: 80px; height: 45px; object-fit: cover; display: block;" />
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); border-radius: 4px; padding: 6px 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </td>
   <td class="text-end">

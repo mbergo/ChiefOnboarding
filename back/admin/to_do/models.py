@@ -61,7 +61,7 @@ class ToDo(BaseItem):
                 break
         return valid
 
-    def get_embed_url(self):
+    def get_video_id(self):
         if not self.video_url:
             return None
         
@@ -74,7 +74,18 @@ class ToDo(BaseItem):
         for pattern in youtube_patterns:
             match = re.search(pattern, self.video_url)
             if match:
-                video_id = match.group(1)
-                return f"https://www.youtube.com/embed/{video_id}"
+                return match.group(1)
         
+        return None
+
+    def get_embed_url(self):
+        video_id = self.get_video_id()
+        if video_id:
+            return f"https://www.youtube.com/embed/{video_id}"
         return self.video_url
+    
+    def get_thumbnail_url(self):
+        video_id = self.get_video_id()
+        if video_id:
+            return f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
+        return None
