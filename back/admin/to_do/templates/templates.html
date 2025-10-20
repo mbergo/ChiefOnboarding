@@ -17,7 +17,21 @@
         <tbody>
           {% for template in object_list %}
           <tr>
-            <td>{{ template.name }}</td>
+            <td>
+              <div class="d-flex align-items-center">
+                {{ template.name }}
+                {% if template.video_url %}
+                <div style="margin-left: 12px; cursor: pointer;" onclick="openVideoModal('{{ template.get_embed_url }}', '{{ template.name|escapejs }}')">
+                  <div style="position: relative; display: inline-block; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                    <img src="{{ template.get_thumbnail_url }}" style="width: 160px; height: 90px; object-fit: cover; display: block;" />
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); border-radius: 6px; padding: 8px 14px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </td>
             <td>{% for tag in template.tags %}<span class="badge bg-blue-lt text-blue-lt-fg" style="margin-right: 10px">{{ tag }}</span>{% endfor %}</td>
             <td class="text-end">
               <a href="{{ template.update_url }}" class="btn btn-white">

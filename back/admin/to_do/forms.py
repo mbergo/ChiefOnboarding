@@ -26,6 +26,7 @@ class ToDoForm(TagModelForm):
                 Div(
                     Field("name"),
                     Field("due_on_day"),
+                    Field("video_url"),
                     MultiSelectField("tags"),
                     css_class="col-4",
                 ),

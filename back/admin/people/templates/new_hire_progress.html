@@ -24,7 +24,19 @@
               <input type="checkbox" disabled class="form-check-input m-0 align-middle" aria-label="Select task" {% if todo.completed %}checked=""{% endif %}>
             </td>
             <td class="w-100">
-              {{ todo.to_do.name }}
+              <div class="d-flex align-items-center">
+                {{ todo.to_do.name }}
+                {% if todo.to_do.video_url %}
+                <div style="margin-left: 12px; cursor: pointer;" onclick="openVideoModal('{{ todo.to_do.get_embed_url }}', '{{ todo.to_do.name|escapejs }}')">
+                  <div style="position: relative; display: inline-block; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                    <img src="{{ todo.to_do.get_thumbnail_url }}" style="width: 160px; height: 90px; object-fit: cover; display: block;" />
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); border-radius: 6px; padding: 8px 14px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
             </td>
             <td class="text-end">
               {% if todo.completed %}

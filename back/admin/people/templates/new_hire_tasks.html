@@ -54,8 +54,18 @@
   <div class="card-body">
     {% for to_do in object.to_do.all %}
     <div class="row">
-      <div class="col">
+      <div class="col d-flex align-items-center">
         {{ to_do.name }}
+        {% if to_do.video_url %}
+        <div style="margin-left: 12px; cursor: pointer;" onclick="openVideoModal('{{ to_do.get_embed_url }}', '{{ to_do.name|escapejs }}')">
+          <div style="position: relative; display: inline-block; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            <img src="{{ to_do.get_thumbnail_url }}" style="width: 160px; height: 90px; object-fit: cover; display: block;" />
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); border-radius: 6px; padding: 8px 14px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
     {% empty %}
