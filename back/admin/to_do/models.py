@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -10,6 +12,12 @@ from organization.models import BaseItem, Notification
 class ToDo(BaseItem):
     content = ContentJSONField(default=dict, verbose_name=_("Content"))
     due_on_day = models.IntegerField(verbose_name=_("Due on day"), default=1)
+    video_url = models.URLField(
+        verbose_name=_("YouTube Video URL"),
+        blank=True,
+        null=True,
+        help_text=_("Optional YouTube video URL to embed with this task"),
+    )
     # Chat bot specific actions
     send_back = models.BooleanField(
         verbose_name=_(
@@ -52,3 +60,21 @@ class ToDo(BaseItem):
                 valid = False
                 break
         return valid
+
+    def get_embed_url(self):
+        if not self.video_url:
+            return None
+        
+        youtube_patterns = [
+            r'(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]+)',
+            r'(?:https?://)?(?:www\.)?youtu\.be/([a-zA-Z0-9_-]+)',
+            r'(?:https?://)?(?:www\.)?youtube\.com/embed/([a-zA-Z0-9_-]+)',
+        ]
+        
+        for pattern in youtube_patterns:
+            match = re.search(pattern, self.video_url)
+            if match:
+                video_id = match.group(1)
+                return f"https://www.youtube.com/embed/{video_id}"
+        
+        return self.video_url
