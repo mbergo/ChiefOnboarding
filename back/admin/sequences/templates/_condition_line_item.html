@@ -8,9 +8,9 @@
       {% if item.video_url %}
       <div aria-label="{% translate "Click to preview video" %}" data-microtip-position="top" role="tooltip" style="display:inline-block; margin-left: 8px; position: relative; cursor: pointer;" onclick="event.stopPropagation(); openVideoModal('{{ item.get_embed_url }}', '{{ item.name|escapejs }}')">
         <div style="position: relative; display: inline-block; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-          <img src="{{ item.get_thumbnail_url }}" style="width: 80px; height: 45px; object-fit: cover; display: block;" />
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); border-radius: 4px; padding: 6px 10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          <img src="{{ item.get_thumbnail_url }}" style="width: 160px; height: 90px; object-fit: cover; display: block;" />
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); border-radius: 6px; padding: 8px 14px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
           </div>
         </div>
       </div>
